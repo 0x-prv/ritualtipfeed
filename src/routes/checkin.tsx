@@ -5,7 +5,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
-import { connectWallet, avatarUrl, shortAddr } from "@/lib/wallet";
+import { connectWallet, shortAddr } from "@/lib/wallet";
 import { WalletAvatar } from "@/components/WalletAvatar";
 import { toPng } from "html-to-image";
 import { Download, Share2, Flame, Trophy, CheckCircle2 } from "lucide-react";
