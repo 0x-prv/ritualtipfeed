@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      check_ins: {
+        Row: {
+          check_in_date: string
+          created_at: string
+          id: string
+          wallet_address: string
+        }
+        Insert: {
+          check_in_date?: string
+          created_at?: string
+          id?: string
+          wallet_address: string
+        }
+        Update: {
+          check_in_date?: string
+          created_at?: string
+          id?: string
+          wallet_address?: string
+        }
+        Relationships: []
+      }
       gas_requests: {
         Row: {
           created_at: string
