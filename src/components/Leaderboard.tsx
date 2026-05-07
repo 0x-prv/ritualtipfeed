@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { avatarUrl, shortAddr } from "@/lib/wallet";
+import { shortAddr } from "@/lib/wallet";
+import { WalletAvatar } from "@/components/WalletAvatar";
 import { Trophy } from "lucide-react";
 
 type Row = { address: string; total: number; count: number };
@@ -44,9 +45,8 @@ export function Leaderboard() {
           <span className="w-6 text-center font-bold text-accent">
             {i === 0 ? <Trophy className="mx-auto h-4 w-4" /> : i + 1}
           </span>
-          <img
-            src={avatarUrl(r.address)}
-            alt=""
+          <WalletAvatar
+            address={r.address}
             className="h-8 w-8 rounded border border-border"
           />
           <span className="font-mono text-xs text-muted-foreground">
