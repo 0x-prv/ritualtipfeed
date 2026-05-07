@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
-import { avatarUrl, shortAddr } from "@/lib/wallet";
+import { shortAddr } from "@/lib/wallet";
+import { WalletAvatar } from "@/components/WalletAvatar";
 import { toast } from "sonner";
 import { Fuel } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
@@ -117,9 +118,8 @@ export function GasRequests({
             className="rounded-xl border border-border bg-card/60 p-4"
           >
             <div className="flex items-center gap-3">
-              <img
-                src={avatarUrl(g.wallet_address)}
-                alt=""
+              <WalletAvatar
+                address={g.wallet_address}
                 className="h-9 w-9 rounded border border-border"
               />
               <div className="flex-1 min-w-0">
