@@ -14,7 +14,60 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      gas_requests: {
+        Row: {
+          created_at: string
+          fulfilled: boolean
+          id: string
+          reason: string
+          wallet_address: string
+        }
+        Insert: {
+          created_at?: string
+          fulfilled?: boolean
+          id?: string
+          reason: string
+          wallet_address: string
+        }
+        Update: {
+          created_at?: string
+          fulfilled?: boolean
+          id?: string
+          reason?: string
+          wallet_address?: string
+        }
+        Relationships: []
+      }
+      tips: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          message: string | null
+          recipient_address: string
+          sender_address: string
+          tx_hash: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: string
+          message?: string | null
+          recipient_address: string
+          sender_address: string
+          tx_hash?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          message?: string | null
+          recipient_address?: string
+          sender_address?: string
+          tx_hash?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
