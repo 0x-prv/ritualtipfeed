@@ -72,14 +72,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "Ritual Tip Feed" },
+      { name: "description", content: "TIP, TRIVIA, AND CHECK IN AT RITUAL TIP FEED" },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "Ritual Tip Feed" },
+      { property: "og:description", content: "TIP, TRIVIA, AND CHECK IN AT RITUAL TIP FEED" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Ritual Tip Feed" },
+      { name: "twitter:description", content: "TIP, TRIVIA, AND CHECK IN AT RITUAL TIP FEED" },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/0d548557-d7f6-41f1-9e1b-4df8eebe1f05/id-preview-cb6f439e--3a388597-1584-4ebc-9d4e-1f9ecdfcfc26.lovable.app-1778124656569.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/0d548557-d7f6-41f1-9e1b-4df8eebe1f05/id-preview-cb6f439e--3a388597-1584-4ebc-9d4e-1f9ecdfcfc26.lovable.app-1778124656569.png" },
     ],
     links: [
       {
