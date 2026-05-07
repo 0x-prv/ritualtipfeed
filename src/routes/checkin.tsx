@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { connectWallet, avatarUrl, shortAddr } from "@/lib/wallet";
+import { WalletAvatar } from "@/components/WalletAvatar";
 import { toPng } from "html-to-image";
 import { Download, Share2, Flame, Trophy, CheckCircle2 } from "lucide-react";
 
@@ -254,9 +255,8 @@ function CheckinPage() {
                   <span className="w-6 text-center font-bold text-accent">
                     {i + 1}
                   </span>
-                  <img
-                    src={avatarUrl(r.address)}
-                    alt=""
+                  <WalletAvatar
+                    address={r.address}
                     className="h-8 w-8 rounded border border-border"
                   />
                   <span className="font-mono text-xs text-muted-foreground">
