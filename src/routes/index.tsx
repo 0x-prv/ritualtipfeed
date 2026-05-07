@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { Wallet } from "lucide-react";
-import { RitualLogo } from "@/components/RitualLogo";
+import ritualLogo from "@/assets/ritual-logo.png";
 import { TipForm } from "@/components/TipForm";
 import { TipsFeed } from "@/components/TipsFeed";
 import { Leaderboard } from "@/components/Leaderboard";
@@ -54,7 +54,13 @@ function Index() {
       <header className="border-b border-border/60 backdrop-blur-md bg-background/40 sticky top-0 z-30">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
           <div className="flex items-center gap-3">
-            <RitualLogo size={36} />
+            <img
+              src={ritualLogo}
+              alt="Ritual"
+              width={36}
+              height={36}
+              className="h-9 w-9 rounded-full object-cover"
+            />
             <div>
               <h1 className="text-lg font-bold tracking-tight">Ritual Tip Feed</h1>
               <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
