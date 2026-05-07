@@ -186,9 +186,8 @@ function CheckinPage() {
               >
                 <div className="absolute inset-0 opacity-10 [background:radial-gradient(circle_at_70%_20%,oklch(0.7_0.2_150),transparent_60%)]" />
                 <div className="relative">
-                  <img
-                    src={avatarUrl(account)}
-                    alt=""
+                  <WalletAvatar
+                    address={account}
                     className="mx-auto h-20 w-20 rounded-xl border-2 border-primary bg-card"
                   />
                   <p className="mt-3 font-mono text-xs text-muted-foreground">
