@@ -8,6 +8,7 @@ import { TipsFeed } from "@/components/TipsFeed";
 import { Leaderboard } from "@/components/Leaderboard";
 import { GasRequests } from "@/components/GasRequests";
 import { ThankYouModal, type TipResult } from "@/components/ThankYouModal";
+import { ProfileSetup } from "@/components/ProfileSetup";
 import { connectWallet, shortAddr, TIP_CONTRACT } from "@/lib/wallet";
 
 export const Route = createFileRoute("/")({
@@ -96,6 +97,16 @@ function Index() {
             <h3 className="mb-4 text-lg font-semibold">Top Tippers</h3>
             <Leaderboard />
           </section>
+
+          {account && (
+            <section className="rounded-2xl border border-border bg-card/60 p-6">
+              <h3 className="mb-1 text-lg font-semibold">Your profile</h3>
+              <p className="mb-4 text-xs text-muted-foreground">
+                Link your X handle to use your real profile picture.
+              </p>
+              <ProfileSetup account={account} />
+            </section>
+          )}
 
           <p className="text-center text-[10px] text-muted-foreground font-mono">
             contract {shortAddr(TIP_CONTRACT)}

@@ -5,7 +5,8 @@ import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
-import { connectWallet, avatarUrl, shortAddr } from "@/lib/wallet";
+import { connectWallet, shortAddr } from "@/lib/wallet";
+import { WalletAvatar } from "@/components/WalletAvatar";
 import { toPng } from "html-to-image";
 import { Download, Share2, Flame, Trophy, CheckCircle2 } from "lucide-react";
 
@@ -185,9 +186,8 @@ function CheckinPage() {
               >
                 <div className="absolute inset-0 opacity-10 [background:radial-gradient(circle_at_70%_20%,oklch(0.7_0.2_150),transparent_60%)]" />
                 <div className="relative">
-                  <img
-                    src={avatarUrl(account)}
-                    alt=""
+                  <WalletAvatar
+                    address={account}
                     className="mx-auto h-20 w-20 rounded-xl border-2 border-primary bg-card"
                   />
                   <p className="mt-3 font-mono text-xs text-muted-foreground">
@@ -254,9 +254,8 @@ function CheckinPage() {
                   <span className="w-6 text-center font-bold text-accent">
                     {i + 1}
                   </span>
-                  <img
-                    src={avatarUrl(r.address)}
-                    alt=""
+                  <WalletAvatar
+                    address={r.address}
                     className="h-8 w-8 rounded border border-border"
                   />
                   <span className="font-mono text-xs text-muted-foreground">
