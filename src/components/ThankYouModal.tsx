@@ -1,7 +1,8 @@
 import { useRef } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { avatarUrl, shortAddr } from "@/lib/wallet";
+import { shortAddr } from "@/lib/wallet";
+import { WalletAvatar } from "@/components/WalletAvatar";
 import { toPng } from "html-to-image";
 import { Download, Share2 } from "lucide-react";
 import { RitualLogo } from "./RitualLogo";
@@ -64,9 +65,8 @@ export function ThankYouModal({
                 <div className="mb-3 flex justify-center">
                   <RitualLogo size={40} />
                 </div>
-                <img
-                  src={avatarUrl(tip.sender)}
-                  alt=""
+                <WalletAvatar
+                  address={tip.sender}
                   className="mx-auto h-24 w-24 rounded-xl border-2 border-primary bg-card"
                 />
                 <h3 className="mt-4 text-2xl font-bold tracking-tight text-accent">
