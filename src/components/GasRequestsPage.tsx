@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Toaster } from "@/components/ui/sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { shortAddr } from "@/lib/wallet";
 import { toast } from "sonner";
@@ -96,12 +97,13 @@ export function GasRequestsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl space-y-8 px-4 py-8">
+    <div className="mx-auto w-full max-w-2xl space-y-6 px-4 py-6 sm:space-y-8 sm:px-6 sm:py-8">
+      <Toaster theme="dark" position="bottom-center" richColors />
       <header className="space-y-2">
         <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card/50 px-3 py-1 text-xs uppercase tracking-widest text-muted-foreground">
           <Fuel className="h-3.5 w-3.5 text-accent" /> Gas Requests
         </div>
-        <h1 className="text-3xl font-bold tracking-tight">Need testnet gas?</h1>
+        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Need testnet gas?</h1>
         <p className="text-sm text-muted-foreground">
           Drop your wallet and the community can top you up.
         </p>
@@ -109,7 +111,7 @@ export function GasRequestsPage() {
 
       <form
         onSubmit={submit}
-        className="space-y-3 rounded-xl border border-border bg-card/50 p-5"
+        className="space-y-3 rounded-xl border border-border bg-card/50 p-4 sm:p-5"
       >
         <div className="space-y-2">
           <Label htmlFor="gw">Your wallet address</Label>
@@ -118,7 +120,7 @@ export function GasRequestsPage() {
             placeholder="0x…"
             value={wallet}
             onChange={(e) => setWallet(e.target.value)}
-            className="font-mono"
+            className="h-11 w-full font-mono text-sm"
           />
         </div>
         <div className="space-y-2">
@@ -129,12 +131,13 @@ export function GasRequestsPage() {
             onChange={(e) => setReason(e.target.value)}
             maxLength={280}
             placeholder="Building a Ritual oracle but out of testnet gas…"
+            className="min-h-[96px] w-full text-sm"
           />
           <div className="text-right text-[10px] text-muted-foreground">
             {reason.length}/280
           </div>
         </div>
-        <Button type="submit" disabled={loading} className="w-full">
+        <Button type="submit" disabled={loading} className="h-11 w-full">
           <Fuel className="mr-2 h-4 w-4" />
           {loading ? "Posting…" : "Request Gas"}
         </Button>
@@ -147,10 +150,10 @@ export function GasRequestsPage() {
             className="space-y-3 rounded-xl border border-border bg-card/60 p-4"
           >
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-primary/15 font-mono text-xs font-bold text-accent">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-primary/15 font-mono text-xs font-bold text-accent">
                 {initials(g.wallet_address)}
               </div>
-              <div className="flex-1 min-w-0">
+              <div className="min-w-0 flex-1">
                 <div className="font-mono text-xs text-muted-foreground">
                   {shortAddr(g.wallet_address)}
                 </div>
@@ -163,21 +166,22 @@ export function GasRequestsPage() {
                 variant="ghost"
                 onClick={() => setShareOf(g)}
                 aria-label="Share"
+                className="h-11 w-11 shrink-0"
               >
                 <Share2 className="h-4 w-4" />
               </Button>
             </div>
 
-            <p className="text-sm text-foreground/90">{g.reason}</p>
+            <p className="break-words text-sm text-foreground/90">{g.reason}</p>
 
-            <div className="flex items-center justify-between gap-2 rounded-md border border-border/60 bg-background/40 px-3 py-2">
-              <code className="truncate font-mono text-[11px] text-muted-foreground">
+            <div className="flex min-w-0 items-center gap-2 rounded-md border border-border/60 bg-background/40 px-3 py-2">
+              <code className="min-w-0 flex-1 truncate font-mono text-[11px] text-muted-foreground">
                 {g.wallet_address}
               </code>
               <Button
                 size="icon"
                 variant="ghost"
-                className="h-7 w-7"
+                className="h-11 w-11 shrink-0"
                 onClick={() => copy(g.wallet_address, "Address copied")}
                 aria-label="Copy address"
               >
@@ -188,7 +192,7 @@ export function GasRequestsPage() {
             <Button
               size="sm"
               variant="secondary"
-              className="w-full"
+              className="h-11 w-full"
               onClick={() => copy(g.wallet_address, "Address copied — tip them!")}
             >
               Tip them
@@ -201,21 +205,21 @@ export function GasRequestsPage() {
       </ul>
 
       <Dialog open={!!shareOf} onOpenChange={(o) => !o && setShareOf(null)}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="w-[calc(100vw-2rem)] max-w-md p-4 sm:p-6">
           <DialogHeader>
             <DialogTitle>Share gas request</DialogTitle>
           </DialogHeader>
           {shareOf && (
             <div className="space-y-4">
-              <p className="text-sm text-foreground/90">{shareOf.reason}</p>
-              <div className="flex items-center justify-between gap-2 rounded-md border border-border bg-background/60 px-3 py-2">
-                <code className="truncate font-mono text-[11px]">
+              <p className="break-words text-sm text-foreground/90">{shareOf.reason}</p>
+              <div className="flex min-w-0 items-center gap-2 rounded-md border border-border bg-background/60 px-3 py-2">
+                <code className="min-w-0 flex-1 truncate font-mono text-[11px]">
                   {shareOf.wallet_address}
                 </code>
                 <Button
                   size="icon"
                   variant="ghost"
-                  className="h-7 w-7"
+                  className="h-11 w-11 shrink-0"
                   onClick={() => copy(shareOf.wallet_address, "Address copied")}
                 >
                   <Copy className="h-3.5 w-3.5" />
@@ -227,7 +231,7 @@ export function GasRequestsPage() {
                 rel="noreferrer"
                 className="block"
               >
-                <Button className="w-full">
+                <Button className="h-11 w-full">
                   <Twitter className="mr-2 h-4 w-4" />
                   Share on X
                 </Button>
