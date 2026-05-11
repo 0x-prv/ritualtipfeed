@@ -6,7 +6,6 @@ import { TipForm } from "@/components/TipForm";
 import { SiteHeader } from "@/components/SiteHeader";
 import { TipsFeed } from "@/components/TipsFeed";
 import { Leaderboard } from "@/components/Leaderboard";
-import { GasRequests } from "@/components/GasRequests";
 import { ThankYouModal, type TipResult } from "@/components/ThankYouModal";
 import { ProfileSetup } from "@/components/ProfileSetup";
 import { connectWallet, shortAddr, TIP_CONTRACT } from "@/lib/wallet";
@@ -38,11 +37,6 @@ function Index() {
     } catch (e: any) {
       toast.error(e?.message ?? "Failed to connect");
     }
-  }
-
-  function handleTipThem(addr: string) {
-    setPrefillRecipient(addr);
-    document.getElementById("tip-form")?.scrollIntoView({ behavior: "smooth" });
   }
 
   return (
@@ -120,13 +114,6 @@ function Index() {
             <TipsFeed />
           </section>
 
-          <section className="rounded-2xl border border-border bg-card/60 p-6">
-            <h3 className="mb-1 text-lg font-semibold">Gas requests</h3>
-            <p className="mb-4 text-xs text-muted-foreground">
-              Out of testnet gas? Drop your address and let the community fuel you.
-            </p>
-            <GasRequests onTipThem={handleTipThem} />
-          </section>
         </div>
       </main>
 
