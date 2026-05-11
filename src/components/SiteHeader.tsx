@@ -32,7 +32,7 @@ export function SiteHeader({
         <nav className="hidden gap-1 md:flex">
           {[
             { to: "/", label: "Tips" },
-            { to: "/gas-requests", label: "Gas" },
+            { to: "/gas-requests", label: "Gas request" },
             { to: "/trivia", label: "Trivia" },
             { to: "/checkin", label: "Check-in" },
           ].map((l) => (
@@ -56,7 +56,7 @@ export function SiteHeader({
       <nav className="flex justify-center gap-1 border-t border-border/40 py-2 md:hidden">
         {[
           { to: "/", label: "Tips" },
-          { to: "/gas-requests", label: "Gas" },
+          { to: "/gas-requests", label: "Gas request" },
           { to: "/trivia", label: "Trivia" },
           { to: "/checkin", label: "Check-in" },
         ].map((l) => (
