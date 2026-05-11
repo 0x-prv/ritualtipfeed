@@ -10,12 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TriviaRouteImport } from './routes/trivia'
+import { Route as GasRequestsRouteImport } from './routes/gas-requests'
 import { Route as CheckinRouteImport } from './routes/checkin'
 import { Route as IndexRouteImport } from './routes/index'
 
 const TriviaRoute = TriviaRouteImport.update({
   id: '/trivia',
   path: '/trivia',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GasRequestsRoute = GasRequestsRouteImport.update({
+  id: '/gas-requests',
+  path: '/gas-requests',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CheckinRoute = CheckinRouteImport.update({
@@ -32,30 +38,34 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/checkin': typeof CheckinRoute
+  '/gas-requests': typeof GasRequestsRoute
   '/trivia': typeof TriviaRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/checkin': typeof CheckinRoute
+  '/gas-requests': typeof GasRequestsRoute
   '/trivia': typeof TriviaRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/checkin': typeof CheckinRoute
+  '/gas-requests': typeof GasRequestsRoute
   '/trivia': typeof TriviaRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/checkin' | '/trivia'
+  fullPaths: '/' | '/checkin' | '/gas-requests' | '/trivia'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/checkin' | '/trivia'
-  id: '__root__' | '/' | '/checkin' | '/trivia'
+  to: '/' | '/checkin' | '/gas-requests' | '/trivia'
+  id: '__root__' | '/' | '/checkin' | '/gas-requests' | '/trivia'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CheckinRoute: typeof CheckinRoute
+  GasRequestsRoute: typeof GasRequestsRoute
   TriviaRoute: typeof TriviaRoute
 }
 
@@ -66,6 +76,13 @@ declare module '@tanstack/react-router' {
       path: '/trivia'
       fullPath: '/trivia'
       preLoaderRoute: typeof TriviaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gas-requests': {
+      id: '/gas-requests'
+      path: '/gas-requests'
+      fullPath: '/gas-requests'
+      preLoaderRoute: typeof GasRequestsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/checkin': {
@@ -88,8 +105,19 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CheckinRoute: CheckinRoute,
+  GasRequestsRoute: GasRequestsRoute,
   TriviaRoute: TriviaRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
