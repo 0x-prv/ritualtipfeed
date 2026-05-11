@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Toaster } from "@/components/ui/sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { shortAddr } from "@/lib/wallet";
 import { toast } from "sonner";
@@ -97,6 +98,7 @@ export function GasRequestsPage() {
 
   return (
     <div className="mx-auto w-full max-w-2xl space-y-6 px-4 py-6 sm:space-y-8 sm:px-6 sm:py-8">
+      <Toaster theme="dark" position="bottom-center" richColors />
       <header className="space-y-2">
         <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card/50 px-3 py-1 text-xs uppercase tracking-widest text-muted-foreground">
           <Fuel className="h-3.5 w-3.5 text-accent" /> Gas Requests
