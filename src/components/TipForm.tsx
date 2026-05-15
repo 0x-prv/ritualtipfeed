@@ -8,6 +8,8 @@ import { sendTip } from "@/lib/wallet";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Send } from "lucide-react";
+import { addLocalTip } from "@/lib/localTips";
+import { useNavigate } from "@tanstack/react-router";
 
 const tipSchema = z.object({
   recipient: z
@@ -41,6 +43,7 @@ export function TipForm({
   const [amount, setAmount] = useState("0.01");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   // Sync prefill when changes from parent
   if (prefillRecipient && prefillRecipient !== recipient && !loading) {
@@ -74,6 +77,12 @@ export function TipForm({
       });
       if (error) console.error(error);
       toast.success("Tip sent!");
+      addLocalTip({
+        sender_address: account,
+        recipient_address: parsed.data.recipient,
+        amount: parseFloat(parsed.data.amount),
+        message: parsed.data.message || null,
+      });
       onSent({
         sender: account,
         recipient: parsed.data.recipient,
@@ -82,6 +91,7 @@ export function TipForm({
         txHash,
       });
       setMessage("");
+      navigate({ to: "/" });
     } catch (err: any) {
       console.error(err);
       toast.error(err?.message ?? "Transaction failed");
