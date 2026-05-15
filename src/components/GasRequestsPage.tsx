@@ -11,6 +11,8 @@ import { shortAddr } from "@/lib/wallet";
 import { toast } from "sonner";
 import { Fuel, Copy, Share2, Twitter } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import { addLocalTip } from "@/lib/localTips";
+import { useNavigate } from "@tanstack/react-router";
 
 type GasReq = {
   id: string;
@@ -44,6 +46,7 @@ export function GasRequestsPage() {
   const [items, setItems] = useState<GasReq[]>([]);
   const [loading, setLoading] = useState(false);
   const [shareOf, setShareOf] = useState<GasReq | null>(null);
+  const navigate = useNavigate();
 
   async function load() {
     const { data } = await supabase
@@ -88,6 +91,13 @@ export function GasRequestsPage() {
       toast.success("Gas request posted");
       setWallet("");
       setReason("");
+      addLocalTip({
+        sender_address: parsed.data.wallet,
+        recipient_address: parsed.data.wallet,
+        amount: 0,
+        message: parsed.data.reason,
+      });
+      navigate({ to: "/" });
     }
   }
 
