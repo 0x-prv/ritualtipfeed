@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { shortAddr } from "@/lib/wallet";
-import { WalletAvatar } from "@/components/WalletAvatar";
+import { PixelCat } from "@/components/PixelCat";
 import { formatDistanceToNow } from "date-fns";
 import { ArrowRight } from "lucide-react";
 
@@ -57,14 +57,16 @@ export function TipsFeed() {
           className="rounded-xl border border-border bg-card/60 p-4 backdrop-blur-sm transition hover:border-primary/60"
         >
           <div className="flex items-center gap-3">
-            <WalletAvatar
-              address={t.sender_address}
-              className="h-10 w-10 rounded-lg border border-border bg-muted"
+            <PixelCat
+              seed={t.sender_address}
+              size={40}
+              className="h-10 w-10 rounded-lg border border-border"
             />
             <ArrowRight className="h-4 w-4 text-primary" />
-            <WalletAvatar
-              address={t.recipient_address}
-              className="h-10 w-10 rounded-lg border border-border bg-muted"
+            <PixelCat
+              seed={t.recipient_address}
+              size={40}
+              className="h-10 w-10 rounded-lg border border-border"
             />
             <div className="ml-auto text-right">
               <div className="text-base font-semibold text-primary-foreground">
