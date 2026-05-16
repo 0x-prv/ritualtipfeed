@@ -148,5 +148,21 @@
     background-attachment: fixed;
     color: var(--color-foreground);
     font-family: ui-sans-serif, system-ui, -apple-system, "Inter", sans-serif;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: url("/ritual-logo.png");
+    background-repeat: repeat;
+    opacity: 0.12;
+    pointer-events: none;
+    z-index: -1;
+
+    /* Optional: adjust size of pattern */
+    background-size: 200px 200px;
   }
 }

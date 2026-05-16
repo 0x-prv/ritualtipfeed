@@ -1,8 +1,10 @@
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import { Wallet } from "lucide-react";
+import { Wallet, Twitter } from "lucide-react";
 import ritualLogo from "@/assets/ritual-logo.png";
 import { shortAddr } from "@/lib/wallet";
+import { supabase } from "@/integrations/supabase/client";
+import { useState } from "react";
 
 export function SiteHeader({
   account,
@@ -11,6 +13,35 @@ export function SiteHeader({
   account?: string | null;
   onConnect?: () => void;
 }) {
+  const [xAccount, setXAccount] = useState<string | null>(null);
+  const [xLoginLoading, setXLoginLoading] = useState(false);
+
+  const handleXLogin = async () => {
+    setXLoginLoading(true);
+    try {
+      // Simple X OAuth simulation - in reality you'd use the actual X API
+      // For now, we'll simulate a successful login with a mock handle
+      // In a real implementation, you would:
+      // 1. Redirect to X OAuth endpoint
+      // 2. Handle callback
+      // 3. Exchange code for token
+      // 4. Fetch user info
+      // 5. Save to supabase or local storage
+
+      // For demo purposes, simulate login
+      setXAccount("ritualchain");
+
+      // In reality, you would save this to your database:
+      // if (account) {
+      //   await saveHandle(account, xAccount);
+      // }
+    } catch (error) {
+      console.error("X login failed:", error);
+    } finally {
+      setXLoginLoading(false);
+    }
+  };
+
   return (
     <header className="border-b border-border/60 backdrop-blur-md bg-background/40 sticky top-0 z-30">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
@@ -47,10 +78,16 @@ export function SiteHeader({
           ))}
         </nav>
         {onConnect && (
-          <Button onClick={onConnect} variant={account ? "secondary" : "default"} size="sm">
-            <Wallet className="mr-2 h-4 w-4" />
-            {account ? shortAddr(account) : "Connect"}
-          </Button>
+          <>
+            <Button onClick={onConnect} variant={account ? "secondary" : "default"} size="sm" className="mr-2">
+              <Wallet className="mr-2 h-4 w-4" />
+              {account ? shortAddr(account) : "Connect"}
+            </Button>
+            <Button onClick={handleXLogin} variant="secondary" size="sm">
+              <Twitter className="mr-2 h-4 w-4" />
+              {xAccount ? `@${xAccount}` : "Login with X"}
+            </Button>
+          </>
         )}
       </div>
       <nav className="flex justify-center gap-1 border-t border-border/40 py-2 md:hidden">
