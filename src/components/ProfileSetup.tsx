@@ -6,7 +6,6 @@ import { fetchHandle, saveHandle, xAvatarUrl } from "@/lib/profiles";
 import { avatarUrl, shortAddr } from "@/lib/wallet";
 import { toast } from "sonner";
 import { Twitter, Save, Upload } from "lucide-react";
-import { useSearchParams, useNavigate } from "@tanstack/react-router";
 
 export function ProfileSetup({ account }: { account: string | null }) {
   const [handle, setHandle] = useState("");
@@ -25,28 +24,7 @@ export function ProfileSetup({ account }: { account: string | null }) {
       setSaved(h);
       setHandle(h ?? "");
     });
-  }, [account, searchParams.x_connected]);
-
-  // Handle X OAuth callback result
-  useEffect(() => {
-    if (searchParams.x_connected === '1') {
-      // Fetch the updated handle after successful connection
-      fetchHandle(account).then((h) => {
-        if (h) {
-          setSaved(h);
-          setHandle(h);
-          toast.success('X account connected!');
-        }
-      });
-      // Clear the success flag from URL
-      navigate({
-        pathname: '/',
-        search: Object.fromEntries(
-          Object.entries(searchParams).filter(([key]) => key !== 'x_connected')
-        )
-      });
-    }
-  }, [account, searchParams.x_connected, navigate]);
+  }, [account]);
 
   async function onSave(e: React.FormEvent) {
     e.preventDefault();
