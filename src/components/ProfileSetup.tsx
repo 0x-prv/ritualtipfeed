@@ -5,7 +5,8 @@ import { Label } from "@/components/ui/label";
 import { fetchHandle, saveHandle, xAvatarUrl } from "@/lib/profiles";
 import { avatarUrl, shortAddr } from "@/lib/wallet";
 import { toast } from "sonner";
-import { Twitter, Save } from "lucide-react";
+import { Twitter, Save, Upload } from "lucide-react";
+import { useSearchParams, useNavigate } from "@tanstack/react-router";
 
 export function ProfileSetup({ account }: { account: string | null }) {
   const [handle, setHandle] = useState("");
@@ -24,7 +25,28 @@ export function ProfileSetup({ account }: { account: string | null }) {
       setSaved(h);
       setHandle(h ?? "");
     });
-  }, [account]);
+  }, [account, searchParams.x_connected]);
+
+  // Handle X OAuth callback result
+  useEffect(() => {
+    if (searchParams.x_connected === '1') {
+      // Fetch the updated handle after successful connection
+      fetchHandle(account).then((h) => {
+        if (h) {
+          setSaved(h);
+          setHandle(h);
+          toast.success('X account connected!');
+        }
+      });
+      // Clear the success flag from URL
+      navigate({
+        pathname: '/',
+        search: Object.fromEntries(
+          Object.entries(searchParams).filter(([key]) => key !== 'x_connected')
+        )
+      });
+    }
+  }, [account, searchParams.x_connected, navigate]);
 
   async function onSave(e: React.FormEvent) {
     e.preventDefault();
@@ -37,6 +59,27 @@ export function ProfileSetup({ account }: { account: string | null }) {
       toast.success(handle ? "X profile linked" : "Profile cleared");
     } catch (err: any) {
       toast.error(err?.message ?? "Failed to save");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function connectX() {
+    if (!account) return;
+    setBusy(true);
+    try {
+      const response = await fetch(`/api/x/login?wallet_address=${encodeURIComponent(account)}`, {
+        method: 'GET',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to initiate X login');
+      }
+
+      // The response will redirect to Twitter OAuth
+      // We don't need to handle the redirect here as it's handled by the browser
+    } catch (err: any) {
+      toast.error(err?.message ?? "Failed to connect X");
     } finally {
       setBusy(false);
     }
@@ -80,9 +123,14 @@ export function ProfileSetup({ account }: { account: string | null }) {
           We auto-fetch your avatar via unavatar.io. No OAuth.
         </p>
       </div>
-      <Button type="submit" disabled={busy} size="sm" className="w-full">
+      <Button type="submit" disabled={busy} size="sm" className="w-full mb-2">
         <Save className="mr-2 h-4 w-4" />
         {busy ? "Saving…" : "Save profile"}
+      </Button>
+
+      <Button onClick={connectX} disabled={busy} size="sm" className="w-full">
+        <Upload className="mr-2 h-4 w-4" />
+        {busy ? "Connecting…" : "Connect X"}
       </Button>
     </form>
   );
