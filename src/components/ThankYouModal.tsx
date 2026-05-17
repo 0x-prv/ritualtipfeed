@@ -1,11 +1,11 @@
 import { useRef } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { shortAddr } from "@/lib/wallet";
-import { WalletAvatar } from "@/components/WalletAvatar";
+import { shortAddr, avatarUrl } from "@/lib/wallet";
+import { useHandle, xAvatarUrl } from "@/lib/profiles";
 import { toPng } from "html-to-image";
 import { Download, Share2 } from "lucide-react";
-import { RitualLogo } from "./RitualLogo";
+import ritualLogo from "@/assets/ritual-logo.png";
 
 export type TipResult = {
   sender: string;
@@ -23,12 +23,21 @@ export function ThankYouModal({
   onClose: () => void;
 }) {
   const cardRef = useRef<HTMLDivElement>(null);
+  const senderHandle = useHandle(tip?.sender);
+  const senderAvatar = senderHandle
+    ? xAvatarUrl(senderHandle)
+    : tip
+      ? avatarUrl(tip.sender)
+      : "";
 
   async function downloadPng() {
     if (!cardRef.current) return;
     const dataUrl = await toPng(cardRef.current, {
       pixelRatio: 2,
       backgroundColor: "#0d1714",
+      cacheBust: true,
+      // Ensure cross-origin images (X avatar, dicebear) export correctly
+      fetchRequestInit: { mode: "cors" },
     });
     const a = document.createElement("a");
     a.href = dataUrl;
@@ -63,11 +72,20 @@ export function ThankYouModal({
               <div className="absolute inset-0 opacity-10 [background:radial-gradient(circle_at_30%_20%,oklch(0.7_0.2_150),transparent_60%)]" />
               <div className="relative">
                 <div className="mb-3 flex justify-center">
-                  <RitualLogo size={40} />
+                  <img
+                    src={ritualLogo}
+                    alt="Ritual"
+                    width={48}
+                    height={48}
+                    crossOrigin="anonymous"
+                    className="h-12 w-12 rounded-full object-cover"
+                  />
                 </div>
-                <WalletAvatar
-                  address={tip.sender}
-                  className="mx-auto h-24 w-24 rounded-xl border-2 border-primary bg-card"
+                <img
+                  src={senderAvatar}
+                  alt=""
+                  crossOrigin="anonymous"
+                  className="mx-auto h-24 w-24 rounded-xl border-2 border-primary bg-card object-cover"
                 />
                 <h3 className="mt-4 text-2xl font-bold tracking-tight text-accent">
                   You are a real Ritualist
