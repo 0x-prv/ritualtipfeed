@@ -8,8 +8,9 @@ import { TipsFeed } from "@/components/TipsFeed";
 import { Leaderboard } from "@/components/Leaderboard";
 import { ThankYouModal, type TipResult } from "@/components/ThankYouModal";
 import { ProfileSetup } from "@/components/ProfileSetup";
-import { connectWallet, shortAddr, TIP_CONTRACT } from "@/lib/wallet";
+import { shortAddr, TIP_CONTRACT } from "@/lib/wallet";
 import { fetchHandle, saveHandle } from "@/lib/profiles";
+import { useWallet } from "@/lib/walletContext";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -141,7 +142,7 @@ function WalletGate({ onConnect }: { onConnect: () => void }) {
 
 // ─── Main Index ────────────────────────────────────────────────────────────
 function Index() {
-  const [account, setAccount] = useState<string | null>(null);
+  const { account, ready, connect, disconnect } = useWallet();
   const [xHandle, setXHandle] = useState<string | null | undefined>(undefined);
   const [checkingHandle, setCheckingHandle] = useState(false);
   const [prefillRecipient, setPrefillRecipient] = useState<string | undefined>();
@@ -149,7 +150,10 @@ function Index() {
 
   // When account connects, check if they already have an X handle
   useEffect(() => {
-    if (!account) return;
+    if (!account) {
+      setXHandle(undefined);
+      return;
+    }
     setCheckingHandle(true);
     fetchHandle(account)
       .then((h) => setXHandle(h ?? null))
@@ -158,28 +162,33 @@ function Index() {
 
   async function handleConnect() {
     try {
-      const a = await connectWallet();
-      setAccount(a);
+      await connect();
       toast.success("Connected to Ritual Chain");
     } catch (e: any) {
       toast.error(e?.message ?? "Failed to connect");
     }
   }
 
-  // Gate 1: No wallet → show wallet gate
-  const showWalletGate = !account;
-  // Gate 2: Has wallet but no X handle → show X gate (after checking)
-  const showXGate = account && !checkingHandle && xHandle === null;  
+  function handleDisconnect() {
+    disconnect();
+    setXHandle(undefined);
+    toast.success("Wallet disconnected");
+  }
+
+  // Wait for restore to complete before deciding to show gates (avoids flicker
+  // and avoids re-prompting on every navigation back to home).
+  const showWalletGate = ready && !account;
+  const showXGate = ready && !!account && !checkingHandle && xHandle === null;
 
   return (
     <div className="min-h-screen">
       <Toaster theme="dark" position="top-center" richColors />
-      <SiteHeader account={account} onConnect={handleConnect} />
+      <SiteHeader account={account} onConnect={handleConnect} onDisconnect={handleDisconnect} />
 
       {/* Gates */}
       {showWalletGate && <WalletGate onConnect={handleConnect} />}
       {showXGate && (
-        <XGate account={account} onDone={(h) => setXHandle(h)} />
+        <XGate account={account!} onDone={(h) => setXHandle(h)} />
       )}
 
       {/* Hero */}
