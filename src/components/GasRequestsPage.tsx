@@ -110,6 +110,12 @@ export function GasRequestsPage() {
     <div className="mx-auto w-full max-w-2xl space-y-6 px-4 py-6 sm:space-y-8 sm:px-6 sm:py-8">
       <Toaster theme="dark" position="bottom-center" richColors />
       <header className="space-y-2">
+          <button
+     onClick={() => navigate({ to: "/" })}
+        className="mb-2 flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+       >  
+         ← Back to home
+        </button>
         <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card/50 px-3 py-1 text-xs uppercase tracking-widest text-muted-foreground">
           <Fuel className="h-3.5 w-3.5 text-accent" /> Gas Requests
         </div>
