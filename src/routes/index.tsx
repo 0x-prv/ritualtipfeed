@@ -142,7 +142,7 @@ function WalletGate({ onConnect }: { onConnect: () => void }) {
 // ─── Main Index ────────────────────────────────────────────────────────────
 function Index() {
   const [account, setAccount] = useState<string | null>(null);
-  const [xHandle, setXHandle] = useState<string | null>(null);
+  const [xHandle, setXHandle] = useState<string | null | undefined>(undefined);
   const [checkingHandle, setCheckingHandle] = useState(false);
   const [prefillRecipient, setPrefillRecipient] = useState<string | undefined>();
   const [thankTip, setThankTip] = useState<TipResult | null>(null);
@@ -152,7 +152,7 @@ function Index() {
     if (!account) return;
     setCheckingHandle(true);
     fetchHandle(account)
-      .then((h) => setXHandle(h))
+      .then((h) => setXHandle(h ?? null))
       .finally(() => setCheckingHandle(false));
   }, [account]);
 
@@ -169,7 +169,7 @@ function Index() {
   // Gate 1: No wallet → show wallet gate
   const showWalletGate = !account;
   // Gate 2: Has wallet but no X handle → show X gate (after checking)
-  const showXGate = account && !checkingHandle && !xHandle;
+  const showXGate = account && !checkingHandle && xHandle === null;  
 
   return (
     <div className="min-h-screen">
