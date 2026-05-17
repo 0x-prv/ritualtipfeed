@@ -1,4 +1,4 @@
-import { createClient } from '@/integrations/supabase.client';
+import { createClient } from '@supabase/supabase-js';
 
 // Helper function to generate a random code verifier for PKCE
 function generateCodeVerifier() {
