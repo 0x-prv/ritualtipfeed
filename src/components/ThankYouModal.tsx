@@ -1,8 +1,8 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { shortAddr } from "@/lib/wallet";
-import { useHandle, xAvatarUrl } from "@/lib/profiles";
+import { useHandle, useStoredAvatar, xAvatarUrl } from "@/lib/profiles";
 import { avatarUrl } from "@/lib/wallet";
 import { toPng } from "html-to-image";
 import { Download, Share2 } from "lucide-react";
@@ -16,31 +16,13 @@ export type TipResult = {
   txHash: string;
 };
 
-async function toBase64(url: string): Promise<string> {
-  try {
-    const res = await fetch(`https://corsproxy.io/?${encodeURIComponent(url)}`);
-    const blob = await res.blob();
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result as string);
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-  } catch {
-    return url;
-  }
-}
-
 export function ThankYouModal({ tip, onClose }: { tip: TipResult | null; onClose: () => void }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const handle = useHandle(tip?.sender ?? null);
-  const [avatarB64, setAvatarB64] = useState<string>("");
-
-  useEffect(() => {
-    if (!tip) return;
-    const url = handle ? xAvatarUrl(handle) : avatarUrl(tip.sender);
-    toBase64(url).then(setAvatarB64);
-  }, [tip, handle]);
+  const stored = useStoredAvatar(tip?.sender ?? null);
+  const finalAvatar = tip
+    ? stored || (handle ? xAvatarUrl(handle) : avatarUrl(tip.sender))
+    : "";
 
   async function downloadPng() {
     if (!cardRef.current) return;
@@ -103,7 +85,7 @@ export function ThankYouModal({ tip, onClose }: { tip: TipResult | null; onClose
                 <div style={{ display: "inline-block", position: "relative", margin: "0 auto 14px" }}>
                   <div style={{ width: "96px", height: "96px", borderRadius: "50%", padding: "3px", background: "linear-gradient(135deg, rgba(74,222,128,0.8), rgba(21,128,61,0.4), rgba(74,222,128,0.8))", boxShadow: "0 0 30px rgba(34,197,94,0.5), 0 0 60px rgba(34,197,94,0.2)" }}>
                     <div style={{ width: "90px", height: "90px", borderRadius: "50%", overflow: "hidden", background: "#071a0c" }}>
-                      {avatarB64 && <img src={avatarB64} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
+                      {finalAvatar && <img src={finalAvatar} alt="" crossOrigin="anonymous" style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
                     </div>
                   </div>
                   <div style={{ position: "absolute", bottom: "4px", right: "4px", width: "16px", height: "16px", borderRadius: "50%", background: "linear-gradient(135deg, #4ade80, #16a34a)", border: "2px solid #050e08", boxShadow: "0 0 10px rgba(74,222,128,0.8)" }} />
