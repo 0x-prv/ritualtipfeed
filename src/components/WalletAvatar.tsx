@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useHandle, xAvatarUrl } from "@/lib/profiles";
+import { useHandle, useStoredAvatar, xAvatarUrl } from "@/lib/profiles";
 import { avatarUrl } from "@/lib/wallet";
 
 export function WalletAvatar({
@@ -12,8 +12,11 @@ export function WalletAvatar({
   alt?: string;
 }) {
   const handle = useHandle(address);
+  const stored = useStoredAvatar(address);
   const [errored, setErrored] = useState(false);
-  const src = handle && !errored ? xAvatarUrl(handle) : avatarUrl(address);
+  const src = !errored
+    ? stored || (handle ? xAvatarUrl(handle) : avatarUrl(address))
+    : avatarUrl(address);
   return (
     <img
       src={src}
