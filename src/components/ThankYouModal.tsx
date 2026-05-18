@@ -18,7 +18,7 @@ export type TipResult = {
 
 async function toBase64(url: string): Promise<string> {
   try {
-    const res = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`);
+    const res = await fetch(`https://corsproxy.io/?${encodeURIComponent(url)}`);
     const blob = await res.blob();
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
