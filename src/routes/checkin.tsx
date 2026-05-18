@@ -5,7 +5,8 @@ import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
-import { connectWallet, shortAddr } from "@/lib/wallet";
+import { shortAddr } from "@/lib/wallet";
+import { useWallet } from "@/lib/walletContext";
 import { WalletAvatar } from "@/components/WalletAvatar";
 import { toPng } from "html-to-image";
 import { Download, Share2, Flame, Trophy, CheckCircle2 } from "lucide-react";
@@ -50,7 +51,7 @@ function computeStreak(dates: string[]): number {
 }
 
 function CheckinPage() {
-  const [account, setAccount] = useState<string | null>(null);
+  const { account, connect, disconnect } = useWallet();
   const [streak, setStreak] = useState(0);
   const [checkedToday, setCheckedToday] = useState(false);
   const [board, setBoard] = useState<{ address: string; streak: number }[]>([]);
@@ -59,8 +60,7 @@ function CheckinPage() {
 
   async function handleConnect() {
     try {
-      const a = await connectWallet();
-      setAccount(a);
+      await connect();
     } catch (e: any) {
       toast.error(e?.message ?? "Connect failed");
     }
@@ -151,7 +151,7 @@ function CheckinPage() {
   return (
     <div className="min-h-screen">
       <Toaster theme="dark" position="top-center" richColors />
-      <SiteHeader account={account} onConnect={handleConnect} />
+      <SiteHeader account={account} onConnect={handleConnect} onDisconnect={disconnect} />
 
       <main className="mx-auto grid max-w-5xl gap-6 px-4 py-10 md:grid-cols-2">
         <section
