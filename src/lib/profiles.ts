@@ -69,6 +69,9 @@ export async function saveHandle(address: string, handle: string) {
   }
   // Server fn: upserts row with handle + uploads avatar to storage
   const result = await syncWalletAvatar({ data: { walletAddress: address, handle: clean } });
+  if (result.error) {
+    throw new Error(result.error);
+  }
   setProfileLocal(address, { handle: clean, avatarUrl: result.avatarUrl });
 }
 

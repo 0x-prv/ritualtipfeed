@@ -5,7 +5,7 @@ ADD COLUMN IF NOT EXISTS avatar_url text;
 -- Create public storage bucket for wallet avatars
 INSERT INTO storage.buckets (id, name, public)
 VALUES ('wallet-avatars', 'wallet-avatars', true)
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT (id) DO UPDATE SET public = EXCLUDED.public;
 
 -- Storage policies: public read, public write (upsert) for wallet-avatars
 CREATE POLICY "wallet_avatars_public_read"
