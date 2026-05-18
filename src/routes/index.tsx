@@ -188,7 +188,10 @@ function Index() {
       {/* Gates */}
       {showWalletGate && <WalletGate onConnect={handleConnect} />}
       {showXGate && (
-        <XGate account={account!} onDone={(h) => setXHandle(h)} />
+        <XGate account={account!} onDone={(h) => {
+          console.log('XGate onDone called with handle:', h);
+          setXHandle(h);
+        }} />
       )}
 
       {/* Hero */}
