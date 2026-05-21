@@ -2,14 +2,14 @@ import {
   createContext,
   useContext,
   useEffect,
-  useRef,
   useState,
   type ReactNode,
 } from "react";
 import { connectWallet as requestConnect, ensureRitualNetwork } from "@/lib/wallet";
 
 const STORAGE_KEY = "ritual.wallet.account";
-const DISCONNECT_KEY = "ritual.wallet.disconnected";
+const DISCONNECT_KEY = "walletDisconnected";
+const LEGACY_DISCONNECT_KEY = "ritual.wallet.disconnected";
 
 type WalletCtx = {
   account: string | null;
@@ -25,50 +25,22 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const [account, setAccount] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
   const [connecting, setConnecting] = useState(false);
-  const initialized = useRef(false);
 
-  // Restore previous session silently (no MetaMask popup)
+  // Never auto-connect: wallet state is only established via explicit user action.
   useEffect(() => {
-    if (initialized.current) return;
-    initialized.current = true;
-
-    let cancelled = false;
-    (async () => {
-      try {
-        const eth = (window as any).ethereum;
-        const userDisconnected = localStorage.getItem(DISCONNECT_KEY) === "1";
-        const stored = localStorage.getItem(STORAGE_KEY);
-        if (!eth || userDisconnected) return;
-
-        // eth_accounts is silent — does not prompt
-        const accounts: string[] = await eth.request({ method: "eth_accounts" });
-        if (cancelled) return;
-        if (accounts && accounts.length > 0) {
-          const a = accounts[0];
-          if (!stored || stored.toLowerCase() === a.toLowerCase()) {
-            setAccount(a);
-            localStorage.setItem(STORAGE_KEY, a);
-          } else {
-            setAccount(a);
-            localStorage.setItem(STORAGE_KEY, a);
-          }
-        }
-      } catch {
-        // ignore
-      } finally {
-        if (!cancelled) setReady(true);
-      }
-    })();
+    setReady(true);
 
     const eth = (window as any).ethereum;
-    if (!eth?.on) return () => { cancelled = true; };
+    if (!eth?.on) return;
 
     const onAccountsChanged = (accounts: string[]) => {
       if (!accounts || accounts.length === 0) {
         setAccount(null);
         localStorage.removeItem(STORAGE_KEY);
+        localStorage.setItem(DISCONNECT_KEY, "true");
+        localStorage.setItem(LEGACY_DISCONNECT_KEY, "1");
       } else {
-        if (localStorage.getItem(DISCONNECT_KEY) === "1") return;
+        if (localStorage.getItem(DISCONNECT_KEY) === "true" || localStorage.getItem(LEGACY_DISCONNECT_KEY) === "1") return;
         setAccount(accounts[0]);
         localStorage.setItem(STORAGE_KEY, accounts[0]);
       }
@@ -79,7 +51,6 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     eth.on("accountsChanged", onAccountsChanged);
     eth.on("chainChanged", onChainChanged);
     return () => {
-      cancelled = true;
       eth.removeListener?.("accountsChanged", onAccountsChanged);
       eth.removeListener?.("chainChanged", onChainChanged);
     };
@@ -92,6 +63,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       setAccount(a);
       localStorage.setItem(STORAGE_KEY, a);
       localStorage.removeItem(DISCONNECT_KEY);
+      localStorage.removeItem(LEGACY_DISCONNECT_KEY);
       try { await ensureRitualNetwork(); } catch { /* ignore */ }
       return a;
     } finally {
@@ -102,7 +74,9 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   function disconnect() {
     setAccount(null);
     localStorage.removeItem(STORAGE_KEY);
-    localStorage.setItem(DISCONNECT_KEY, "1");
+    localStorage.setItem(DISCONNECT_KEY, "true");
+    localStorage.setItem(LEGACY_DISCONNECT_KEY, "1");
+    sessionStorage.removeItem(STORAGE_KEY);
     // Best-effort: ask wallet to revoke permissions (MetaMask 11+)
     const eth = (window as any).ethereum;
     try {
