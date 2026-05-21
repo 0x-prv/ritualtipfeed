@@ -23,7 +23,7 @@ type GasReq = {
 };
 
 const schema = z.object({
-  wallet: z.string().trim().min(4).max(100),
+  wallet: z.string().trim().regex(/^0x[a-fA-F0-9]{40}$/, "Invalid wallet address"),
   reason: z.string().trim().min(3, "Tell us why").max(280),
 });
 
@@ -87,12 +87,17 @@ export function GasRequestsPage() {
     });
     setLoading(false);
     if (error) {
-      console.error("Supabase error:", error);
-      toast.error(error.message ?? "Failed to submit");
+      toast.error("Failed to submit");
     } else {
       toast.success("Gas request posted");
       setWallet("");
       setReason("");
+      addLocalTip({
+        sender_address: parsed.data.wallet,
+        recipient_address: parsed.data.wallet,
+        amount: 0,
+        message: parsed.data.reason,
+      });
       navigate({ to: "/" });
     }
   }
@@ -106,11 +111,11 @@ export function GasRequestsPage() {
     <div className="mx-auto w-full max-w-2xl space-y-6 px-4 py-6 sm:space-y-8 sm:px-6 sm:py-8">
       <Toaster theme="dark" position="bottom-center" richColors />
       <header className="space-y-2">
-        <button
-          onClick={() => navigate({ to: "/" })}
-          className="mb-2 flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
-        >
-          ← Back to home
+          <button
+     onClick={() => navigate({ to: "/" })}
+        className="mb-2 flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+       >  
+         ← Back to home
         </button>
         <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card/50 px-3 py-1 text-xs uppercase tracking-widest text-muted-foreground">
           <Fuel className="h-3.5 w-3.5 text-accent" /> Gas Requests
@@ -162,10 +167,10 @@ export function GasRequestsPage() {
             className="space-y-3 rounded-xl border border-border bg-card/60 p-4"
           >
             <div className="flex items-center gap-3">
-              <WalletAvatar
-                address={g.wallet_address}
-                className="h-10 w-10 shrink-0 rounded-full border border-border object-cover"
-              />
+            <WalletAvatar
+  address={g.wallet_address}
+  className="h-10 w-10 shrink-0 rounded-full border border-border object-cover"
+                   />
               <div className="min-w-0 flex-1">
                 <div className="font-mono text-xs text-muted-foreground">
                   {shortAddr(g.wallet_address)}
@@ -238,12 +243,12 @@ export function GasRequestsPage() {
                   <Copy className="h-3.5 w-3.5" />
                 </Button>
               </div>
-              
+              <a
                 href={tweetUrl(shareOf)}
                 target="_blank"
                 rel="noreferrer"
                 className="block"
-              >
+                >
                 <Button className="h-11 w-full">
                   <Twitter className="mr-2 h-4 w-4" />
                   Share on X
