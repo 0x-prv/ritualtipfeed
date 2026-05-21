@@ -38,7 +38,7 @@ function OnboardingPage() {
   }, [account]);
 
   useEffect(() => {
-    if (!showWelcome) return;
+    if (!showWelcome) return; // eslint-disable-line
     const canvas = document.getElementById("confetti-canvas") as HTMLCanvasElement;
     if (!canvas) return;
     const ctx = canvas.getContext("2d")!;
