@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { avatarUrl } from "@/lib/wallet";
-import { syncWalletAvatar } from "@/lib/avatars.functions";
 
 export function xAvatarUrl(handle: string) {
   const h = handle.trim().replace(/^@/, "");
@@ -9,7 +8,7 @@ export function xAvatarUrl(handle: string) {
 }
 
 type Profile = { handle: string | null; avatarUrl: string | null };
-const cache = new Map<string, Profile>(); // address(lower) -> profile
+const cache = new Map<string, Profile>();
 const inflight = new Map<string, Promise<Profile>>();
 const listeners = new Map<string, Set<(p: Profile) => void>>();
 
@@ -55,24 +54,16 @@ export function setProfileLocal(address: string, p: Partial<Profile>) {
 
 export async function saveHandle(address: string, handle: string) {
   const clean = handle.trim().replace(/^@/, "");
-  if (!clean) {
-    // Clear handle only
-    const { error } = await supabase
-      .from("wallet_profiles")
-      .upsert(
-        { wallet_address: address, x_handle: null },
-        { onConflict: "wallet_address" },
-      );
-    if (error) throw error;
-    setProfileLocal(address, { handle: null });
-    return;
-  }
-  // Server fn: upserts row with handle + uploads avatar to storage
-  const result = await syncWalletAvatar({ data: { walletAddress: address, handle: clean } });
-  if (result.error) {
-    throw new Error(result.error);
-  }
-  setProfileLocal(address, { handle: clean, avatarUrl: result.avatarUrl });
+  const xAvatar = clean ? xAvatarUrl(clean) : null;
+
+  const { error } = await supabase
+    .from("wallet_profiles")
+    .upsert(
+      { wallet_address: address, x_handle: clean || null, avatar_url: xAvatar },
+      { onConflict: "wallet_address" },
+    );
+  if (error) throw error;
+  setProfileLocal(address, { handle: clean || null, avatarUrl: xAvatar });
 }
 
 export function useHandle(address?: string | null) {
