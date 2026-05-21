@@ -48,7 +48,7 @@ export function SiteHeader({
         <nav className="hidden gap-1 md:flex">
           {[
             { to: "/home", label: "Home" },
-            { to: "/request-card", label: "Request Card" },
+            { to: "/request-card", label: "Request Gas" },
             { to: "/check-ins", label: "Check Ins" },
             { to: "/trivia", label: "Trivia" },
           ].map((l) => (

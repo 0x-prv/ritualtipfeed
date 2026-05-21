@@ -116,7 +116,7 @@ function OnboardingPage() {
               </div>
             </div>
             <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
-              <Button onClick={() => navigate({ to: "/request-card" })}>Request Card</Button>
+              <Button onClick={() => navigate({ to: "/request-card" })}>Request Gas</Button>
               <Button variant="secondary" onClick={() => navigate({ to: "/home" })}>Home</Button>
               <Button variant="secondary" onClick={() => navigate({ to: "/check-ins" })}>Check Ins</Button>
               <Button variant="secondary" onClick={() => navigate({ to: "/trivia" })}>Trivia</Button>
