@@ -1,9 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/sonner";
 import { SiteHeader } from "@/components/SiteHeader";
 import { avatarUrl } from "@/lib/wallet";
+import { xAvatarUrl, fetchHandle } from "@/lib/profiles";
+import { useWallet } from "@/lib/walletContext";
 import { toPng } from "html-to-image";
 import { Download, Share2, RotateCcw, Brain, Check, X } from "lucide-react";
 
@@ -90,7 +92,14 @@ function TriviaPage() {
   const [step, setStep] = useState(0);
   const [picks, setPicks] = useState<number[]>([]);
   const [picked, setPicked] = useState<number | null>(null);
+  const [xHandle, setXHandle] = useState<string | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
+  const { account } = useWallet();
+
+  useEffect(() => {
+    if (!account) return;
+    fetchHandle(account).then((h) => setXHandle(h ?? null));
+  }, [account]);
 
   const done = step >= QUESTIONS.length;
   const score = picks.reduce(
@@ -223,7 +232,7 @@ function TriviaPage() {
                   Ritual Trivia
                 </p>
                 <img
-                  src={avatarUrl(seed)}
+                  src={xHandle ? xAvatarUrl(xHandle) : avatarUrl(seed)}
                   alt=""
                   className="mx-auto mt-3 h-24 w-24 rounded-xl border-2 border-primary bg-card"
                 />
