@@ -1,16 +1,14 @@
 # RitualTipFeed
 
-A decentralized social tipping platform built on Ritual.
-
-RitualTipFeed allows users to share posts and receive on-chain tips directly from supporters. By combining social interactions with blockchain payments, creators can monetize their content transparently and instantly.
+RitualTipFeed is a decentralized social platform where creators can share content and receive direct on-chain tips from their community. Built with Next.js, TypeScript, Solidity, and Ritual infrastructure, it combines social engagement with transparent peer-to-peer payments.
 
 ## Features
 
 - Social feed
 - Create and share posts
-- On-chain tipping system
-- Wallet connection
 - Creator profiles
+- Wallet connection
+- On-chain tipping
 - Transaction history
 - Responsive UI
 - Modern Web3 experience
@@ -21,47 +19,44 @@ RitualTipFeed allows users to share posts and receive on-chain tips directly fro
 - TypeScript
 - Tailwind CSS
 - Solidity
+- Hardhat
 - Wagmi
 - Viem
 - RainbowKit
-- Hardhat
+
+## Ritual Skills Used
+
+This project leverages the Ritual ecosystem and AI-assisted development workflow:
+
+- **use-wallet** – wallet connection and account management
+- **use-contracts** – smart contract interactions
+- **use-events** – reading on-chain events
+- **use-viem** – transaction execution and client setup
+- **use-hardhat** – contract deployment and local development
+- **use-nextjs** – frontend architecture and routing
+- **use-typescript** – type-safe development
+- **use-tailwind** – responsive UI styling
 
 ## Smart Contracts
 
-- Tip contract
-- Creator payment contract
+- Tip Contract
+- Creator Payment Contract
 
 ## Getting Started
-
-Clone the repository:
 
 ```bash
 git clone https://github.com/0x-prv/RitualTipFeed.git
 cd RitualTipFeed
-```
 
-Install dependencies:
-
-```bash
 npm install
-```
 
-Run the development server:
-
-```bash
 npm run dev
-```
-
-Build for production:
-
-```bash
-npm run build
 ```
 
 ## Vision
 
 RitualTipFeed aims to empower creators by providing a decentralized platform where anyone can publish content and receive direct support from their audience without intermediaries.
 
-## Author
-
-- GitHub: https://github.com/0x-prv
+## Built By
+DC: PRV04_ X @PRV04_
+GitHub: https://github.com/0x-prv
